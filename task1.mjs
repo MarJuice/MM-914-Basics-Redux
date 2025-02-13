@@ -62,5 +62,3 @@ function peek(nextRow, nextCol) {
     }
     return false; // Returns false if the move isn't allowed
 }
-
-export { move, turn, peek };

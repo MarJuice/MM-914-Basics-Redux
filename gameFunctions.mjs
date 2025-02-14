@@ -1,12 +1,16 @@
 import maps from "./maps.mjs";
 import { CAR, GOAL, playerPos } from "./gameConstants.mjs";
 
+const POSSIBLE_MAPS = [maps.map1, maps.map2, maps.map3, maps.map4, maps.map5];
 let map = []; // Empty array to store rows and columns
-let rawMap = maps.map1.split("\n"); // Separate each row of the map into an array
 let goalPos = []; // Empty array to store the goal position
-for (let i = 0; i < rawMap.length; i++) { // Iterate over each row
-    map.push([...rawMap[i]]); // Push the rows into the map array
-}
+
+function loadMap(mapNum) {
+    let rawMap = mapNum.split("\n"); // Separate each row of the map into an array
+    for (let i = 0; i < rawMap.length; i++) { // Iterate over each row
+        map.push([...rawMap[i]]); // Push the rows into the map array
+    }
+} 
 
 function update() { // Checks every row and column
     for (let row = 0; row < map.length; row++) {

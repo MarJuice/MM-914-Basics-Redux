@@ -1,13 +1,12 @@
 import { playerPos, CAR, WALL, EMPTY } from "./gameConstants.mjs";
-import { map, update, drawMap } from "./gameFunctions.mjs";
+import { goalPos, map, update, drawMap } from "./gameFunctions.mjs";
 
-setInterval(() => { // Repeats update cycle every 100 milliseconds
+let interval = setInterval(() => { // Repeats update cycle every 100 milliseconds
     console.clear();
     update();
     move();
     drawMap();
 }, 100);
-
 
 let direction = "left"; // Default driving direction
 
@@ -30,35 +29,66 @@ function move() {
         nextRow++;
     }
 
-    console.log(`Trying to move from ${row}, ${col} to ${nextRow}, ${nextCol}`); // Debug message for testing
-
     if (peek(nextRow, nextCol)) { // Peeks at the next position in the headed direction
-        console.log(`Moving to ${nextRow}, ${nextCol}`); // Debug message for testing
         map[row][col] = EMPTY; // Replace the car with an empty square
         map[nextRow][nextCol] = CAR; // Move the car to the next square
         playerPos.row = nextRow; // Update the player position to the next row
         playerPos.col = nextCol; // Update the player position to the next column
     } else {
-        console.log("Can't move!"); // Debug message for testing
-        turn(); // Turn if the car can't move 
-        // !car currently loops back and forth if it needs to turn left!
+        turn(1); // Turn if the car can't move 
+        
+        nextRow = playerPos.row;
+        nextCol = playerPos.col;
+
+        if (direction == "left") { 
+            nextCol = col - 1;
+        } else if (direction == "right") {
+            nextCol = col + 1;
+        } else if (direction == "up") {
+            nextRow = row - 1;
+        } else if (direction == "down") {
+            nextRow = row + 1;
+        }
+
+        if (!peek(nextRow, nextCol)) { // If the car can't move in the new direction, turn again
+            turn(2); // Turn right twice degrees, effectively a left turn from the original position
+            
+            if (direction == "left") { 
+                nextCol = col - 1;
+            } else if (direction == "right") {
+                nextCol = col + 1;
+            } else if (direction == "up") {
+                nextRow = row - 1;
+            } else if (direction == "down") {
+                nextRow = row + 1;
+            }
+        }
+    }
+    if (atGoal()) { // Check if at the goal
+        clearInterval(interval); // Stop the loop
+        console.log("Goal reached!");
     }
 }
 
-function turn() {
-    // Turns the car 90 deg clockwise.
+function turn(turns) { // Parameter for the number of turns
     const directions = ["left", "up", "right", "down"]; // List of possible directions
-    let index = directions.indexOf(direction); // Creates index to always turn 90 degrees
-    direction = directions[(index + 1) % 4]; // Goes to the next index and repeats back
+    let index = directions.indexOf(direction); // Get the index of the current position
+    direction = directions[(index + turns) % 4]; // Update the direction by 90 degrees for each turn
 }
 
 function peek(nextRow, nextCol) {
     // Returns true if the next cell is open, otherwise false.
-    console.log(`Peeking at ${nextRow}, ${nextCol}`); // Debug message for testing
     if (nextRow >= 0 && nextRow < map.length && nextCol >= 0 && nextCol < map[nextRow].length) { // Checks if the next position is within bounds
         let result = map[nextRow][nextCol] != WALL; // Moves the car to the next square as long as it's not a wall
-        console.log(`Peek result: ${result}`); // Debug message for testing
         return result;
     }
     return false; // Returns false if the move isn't allowed
+}
+
+function atGoal() {
+    // Returns true if the current cell is the goal cell.
+    if (playerPos.row == goalPos[0] && playerPos.col == goalPos[1]) { // Checks if the position is at the same as the goal position
+        return true;
+    }
+    return false;
 }

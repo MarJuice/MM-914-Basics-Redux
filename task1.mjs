@@ -1,5 +1,8 @@
+import maps from "./maps.mjs";
 import { playerPos, CAR, WALL, EMPTY } from "./gameConstants.mjs";
-import { goalPos, map, update, drawMap } from "./gameFunctions.mjs";
+import { goalPos, map, update, drawMap, loadMap } from "./gameFunctions.mjs";
+
+loadMap(maps.map1); // Load the first map
 
 let interval = setInterval(() => { // Repeats update cycle every 100 milliseconds
     console.clear();

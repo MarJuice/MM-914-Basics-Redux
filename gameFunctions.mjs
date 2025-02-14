@@ -1,7 +1,6 @@
 import maps from "./maps.mjs";
 import { CAR, GOAL, playerPos } from "./gameConstants.mjs";
 
-const POSSIBLE_MAPS = [maps.map1, maps.map2, maps.map3, maps.map4, maps.map5];
 let map = []; // Empty array to store rows and columns
 let goalPos = []; // Empty array to store the goal position
 

@@ -28,4 +28,4 @@ function drawMap() { // Draws the updated array
     console.log(map.map(row => row.join("")).join("\n")); // Draws a formatted array by joining rows and columns into a single string
 }
 
-export { goalPos, map, update, drawMap };
+export { goalPos, map, update, drawMap, loadMap };
